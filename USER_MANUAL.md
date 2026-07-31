@@ -1,5 +1,6 @@
 # Aura Medical Center Management System (MCMS)
 ## Non-Technical Staff User Manual
+*A Turnkey Product of [SS Labz](https://ss-labz.pages.dev/)*
 
 Welcome to your new Clinic Management System! This guide is written in plain English to help you navigate and use the software in your daily operations. No IT or computer programming knowledge is required.
 

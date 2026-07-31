@@ -130,6 +130,19 @@ export function Sidebar({ currentTab, setCurrentTab }: SidebarProps) {
           </span>
         </div>
 
+        {/* SS Labz Branding */}
+        <div className="text-center pt-1 border-t border-slate-900 mt-1">
+          <a
+            href="https://ss-labz.pages.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[9px] text-slate-500 hover:text-medical-400 flex items-center justify-center gap-1 transition-colors"
+          >
+            <span>Product of SS Labz</span>
+            <ExternalLink className="h-2.5 w-2.5" />
+          </a>
+        </div>
+
         {/* Logout */}
         <button
           onClick={logout}

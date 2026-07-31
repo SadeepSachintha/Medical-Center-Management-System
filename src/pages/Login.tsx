@@ -183,6 +183,20 @@ export function Login() {
             </div>
           </div>
         </Card>
+
+        {/* SS Labz Branding */}
+        <div className="text-center mt-4 animate-fade-in-up">
+          <a
+            href="https://ss-labz.pages.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-slate-500 hover:text-medical-400 inline-flex items-center gap-1 transition-colors bg-slate-905/30 backdrop-blur-sm border border-slate-805/40 px-3 py-1 rounded-full"
+          >
+            <span>Product of SS Labz</span>
+            <span className="text-slate-600">•</span>
+            <span className="underline">ss-labz.pages.dev</span>
+          </a>
+        </div>
       </div>
     </div>
   );

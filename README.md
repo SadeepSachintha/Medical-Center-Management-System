@@ -1,5 +1,6 @@
 # Medical Center Management System (MCMS)
 ## Standalone Turnkey Clinical Solution
+*A Turnkey Product of [SS Labz](https://ss-labz.pages.dev/)*
 
 A high-performance, responsive, and completely offline-ready web application designed for outpatient clinics, polyclinics, and boutique medical centers. 
 

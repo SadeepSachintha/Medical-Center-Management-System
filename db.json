@@ -200,6 +200,14 @@
       "role": "pharmacist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-821777",
+      "timestamp": "2026-07-31T05:58:52.477Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
     }
   ]
 }
