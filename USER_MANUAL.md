@@ -58,6 +58,7 @@ Our system replaces manual paper files and clipboard queues with a fast, real-ti
 4. In the checkout window, choose the payment method: **Cash**, **Card**, **Insurance**, or **QR Code**.
 5. Click **Finalize Checkout**.
 6. The status changes to a green **"paid"**. Click the **Receipt** button to print the billing receipt layout for the patient.
+7. Click the green **Share via WhatsApp** button to instantly open a WhatsApp chat box populated with a beautifully formatted digital receipt (detailing itemized costs and totals) addressed to the patient's registered number.
 
 ---
 
@@ -69,12 +70,18 @@ Our system replaces manual paper files and clipboard queues with a fast, real-ti
 2. In the **Waiting Patients Queue** panel, find the next patient (marked in blue).
 3. Click the green **Call Patient** button.
 4. **What happens next**: The waiting room TV screen will sound a chime and read aloud: *"Token 102, John Doe, please proceed to consultation Room 1"*.
+5. **Configuring Audio Languages**: You can customize the TV announcer language. Click the **Waiting Room Board** link at the bottom of the left sidebar, and select from the **Language dropdown** at the top right:
+   - **Mixed (EN + SI)**: Speaks in English first, followed by a Sinhala repetition (Recommended for local Sri Lankan clinics).
+   - **English (EN)**: Speaks in standard English only.
+   - **Sinhala (SI)**: Speaks in standard Sinhala only.
+   - **Tamil (TA)**: Speaks in standard Tamil only.
 
 ### B. Entering Medical Notes & Prescriptions
 1. Once the patient enters your room, review their **Nurse Triage Vitals** on the screen.
 2. In the **Clinical Documentation** form:
    - Check the boxes for **Symptoms** (e.g., Fever, Cough, Headache).
    - Type your detailed consultation notes in the text box.
+   - **Hands-Free Dictation**: Alternatively, click the blue **Dictate** button above the text box. Speak clearly into your computer microphone, and the software will convert your voice to text and write the notes for you.
    - Check the boxes for **Diagnosis Codes** (e.g., Essential Hypertension, Acute Tonsillitis).
 3. To add medicines in the **Prescription Builder**:
    - Select a medication from the list.
