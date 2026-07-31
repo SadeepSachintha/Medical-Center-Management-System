@@ -574,6 +574,15 @@ app.get('/api/admin/backup', (req, res) => {
   res.json(db.data);
 });
 
+// Production Static Client Serve
+const path = require('path');
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+}
+
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`MCMS Express & WebSockets server running on port ${PORT}`);

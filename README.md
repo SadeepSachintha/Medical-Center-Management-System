@@ -91,6 +91,16 @@ To compile and build standard minified scripts inside `dist/`:
 npm run build
 ```
 
+### 4. Turnkey Docker Deployment (LAN Service)
+You can deploy the entire clinical suite as a lightweight, single-port Docker container. This is recommended for local LAN servers:
+1. Make sure Docker is installed on your local clinic server.
+2. Build and launch the container in the background:
+   ```bash
+   docker-compose up --build -d
+   ```
+3. Open your browser and navigate to `http://localhost` (exposed on standard HTTP port 80). The container serves both the compiled Vite frontend and backend WebSockets API.
+4. Database data (`db.json`) is mounted on a persistent Docker volume named `aura-mcms-data` to protect logs and records across container restarts.
+
 ---
 
 ## 5. Demo Logins (Quick Authentication)

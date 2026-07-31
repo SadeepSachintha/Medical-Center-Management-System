@@ -354,6 +354,14 @@
       "role": "doctor",
       "action": "Call Patient",
       "details": "Called Patient John Doe (Token 103) to consult room"
+    },
+    {
+      "id": "l-930512",
+      "timestamp": "2026-07-31T06:16:12.925Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
     }
   ]
 }

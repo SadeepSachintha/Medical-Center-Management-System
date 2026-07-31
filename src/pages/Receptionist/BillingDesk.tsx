@@ -67,6 +67,28 @@ export function BillingDesk() {
     window.print();
   };
 
+  const handleWhatsAppShare = () => {
+    if (!printInvoice) return;
+    // Strip non-numbers for WhatsApp phone format
+    const rawPhone = printInvoice.patientPhone || '';
+    const phone = rawPhone.replace(/\D/g, '');
+    
+    // Build a structured, professional message
+    const itemsText = printInvoice.items.map((i: any) => `• ${i.name} - LKR ${i.price.toFixed(2)}`).join('\n');
+    const messageText = `*AURA MEDICAL CENTER - RECEIPT SUMMARY*\n\n` +
+                        `*Patient:* ${printInvoice.patientName}\n` +
+                        `*Receipt ID:* ${printInvoice.id}\n` +
+                        `*Date:* ${new Date(printInvoice.date).toLocaleDateString()}\n\n` +
+                        `*Charges Breakdown:*\n${itemsText}\n\n` +
+                        `*GRAND TOTAL PAID:* *LKR ${printInvoice.total.toFixed(2)}*\n` +
+                        `*Payment Mode:* ${printInvoice.paymentMethod}\n\n` +
+                        `_Thank you for choosing Aura. Powered by SS Labz (https://ss-labz.pages.dev)_`;
+                        
+    const encodedText = encodeURIComponent(messageText);
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone || '94'}&text=${encodedText}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <>
       <div className="p-6 space-y-6 animate-fade-in-up no-print">
@@ -223,9 +245,18 @@ export function BillingDesk() {
 
                 <Button 
                   onClick={handlePrintReceipt}
-                  className="w-full text-xs py-2 bg-slate-850 hover:bg-slate-800 border border-slate-700 mt-4 text-white"
+                  className="w-full text-xs py-2 bg-slate-850 hover:bg-slate-800 border border-slate-700 mt-4 text-white animate-fade-in-up"
                 >
                   <Printer className="h-4 w-4" /> Print Medical Invoice
+                </Button>
+                <Button 
+                  onClick={handleWhatsAppShare}
+                  className="w-full text-xs py-2 bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800 text-emerald-350 flex items-center justify-center gap-1.5 mt-2 animate-fade-in-up"
+                >
+                  <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.739-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.114-2.906-6.99C16.246 1.875 13.762 1.84 11.127 1.84c-5.437 0-9.863 4.424-9.867 9.869 0 1.708.468 3.374 1.354 4.849l-.997 3.637 3.738-.981zm12.39-6.248c-.263-.131-1.56-.77-1.802-.857-.243-.087-.419-.131-.596.131-.176.263-.683.857-.837 1.031-.154.175-.308.197-.571.066-.263-.13-1.11-.409-2.115-1.302-.782-.697-1.309-1.558-1.463-1.821-.154-.264-.016-.407.116-.539.12-.119.263-.308.395-.462.132-.154.176-.264.264-.44.088-.176.044-.33-.022-.462-.066-.132-.596-1.438-.816-1.966-.214-.515-.45-.445-.618-.454-.16-.008-.342-.01-.525-.01-.18 0-.476.068-.724.341-.248.273-.948.927-.948 2.261 0 1.334.97 2.624 1.102 2.8.132.176 1.907 2.913 4.62 4.08.646.277 1.15.443 1.543.568.65.206 1.24.177 1.707.107.519-.078 1.56-.638 1.78-.254.22-.619.22-1.15.154-1.242-.066-.093-.242-.154-.505-.286z"/>
+                  </svg>
+                  Share via WhatsApp
                 </Button>
               </div>
             </Card>
