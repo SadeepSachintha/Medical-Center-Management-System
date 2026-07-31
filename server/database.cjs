@@ -1,0 +1,145 @@
+const fs = require('fs');
+const path = require('path');
+
+const DB_FILE = path.join(__dirname, '../db.json');
+
+const db = {
+  data: {},
+  
+  init() {
+    if (fs.existsSync(DB_FILE)) {
+      try {
+        this.data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+      } catch (e) {
+        console.error('Error reading db.json, initializing mock database', e);
+        this.data = this.getInitialData();
+        this.save();
+      }
+    } else {
+      this.data = this.getInitialData();
+      this.save();
+    }
+  },
+
+  save() {
+    fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
+  },
+
+  getInitialData() {
+    return {
+      users: [
+        { id: "u-1", name: "System Administrator", username: "admin", password: "admin123", role: "admin", specialty: "Clinic Ops" },
+        { id: "u-2", name: "Dr. Evelyn Carter", username: "doctor", password: "doctor123", role: "doctor", specialty: "General Medicine" },
+        { id: "u-3", name: "Sarah Jenkins", username: "receptionist", password: "reception123", role: "receptionist", specialty: "Front Desk" },
+        { id: "u-4", name: "Mark Rossi", username: "pharmacist", password: "pharmacy123", role: "pharmacist", specialty: "Pharmacy Operations" }
+      ],
+      patients: [
+        { id: "p-1", nationalId: "NID-9988-77", name: "John Doe", phone: "1234567890", dob: "1988-05-12", gender: "Male", allergies: "Penicillin", history: "Hypertension, diagnosed in 2021. Managed with diet changes." },
+        { id: "p-2", nationalId: "NID-1122-33", name: "Jane Smith", phone: "0987654321", dob: "1992-09-24", gender: "Female", allergies: "None", history: "Mild asthma, seasonal allergies. Inhaler as needed." }
+      ],
+      appointments: [
+        { id: "a-1", patientId: "p-1", doctorId: "u-2", tokenNumber: "101", date: "2026-07-31T09:00:00.000Z", status: "completed" },
+        { id: "a-2", patientId: "p-2", doctorId: "u-2", tokenNumber: "102", date: "2026-07-31T09:30:00.000Z", status: "waiting", triage: { bp: "120/80", hr: "72", temp: "98.6", bmi: "22.5" } }
+      ],
+      encounters: [
+        { 
+          id: "e-1", 
+          appointmentId: "a-1", 
+          patientId: "p-1", 
+          doctorId: "u-2", 
+          date: "2026-07-31T09:15:00.000Z", 
+          triage: { bp: "135/85", hr: "78", temp: "98.6", bmi: "24.2" }, 
+          notes: "Patient reported mild headache. BP slightly elevated. Advised low salt diet and lifestyle adjustments. Follow up in 3 months.", 
+          diagnosisCodes: "I10 (Essential Hypertension)" 
+        }
+      ],
+      prescriptions: [
+        { 
+          id: "pr-1", 
+          encounterId: "e-1", 
+          patientId: "p-1", 
+          doctorId: "u-2", 
+          date: "2026-07-31T09:15:00.000Z", 
+          items: [{ drugName: "Atorvastatin 10mg", dosage: "1 tab", frequency: "Once daily", duration: "30 days" }], 
+          status: "dispensed" 
+        }
+      ],
+      invoices: [
+        { 
+          id: "inv-1", 
+          appointmentId: "a-1", 
+          patientId: "p-1", 
+          doctorId: "u-2", 
+          date: "2026-07-31T09:20:00.000Z", 
+          items: [
+            { name: "Doctor Consultation Fee", price: 50.00, type: "consultation" }, 
+            { name: "Atorvastatin 10mg (30 tabs)", price: 26.97, type: "pharmacy" }
+          ], 
+          total: 76.97, 
+          status: "paid", 
+          paymentMethod: "Card" 
+        }
+      ],
+      inventory: [
+        { id: "i-1", name: "Amoxicillin 500mg", qty: 50, price: 12.50, batchNumber: "AMX-2026", expiryDate: "2027-12-31", minStockLevel: 15 },
+        { id: "i-2", name: "Atorvastatin 10mg", qty: 120, price: 8.99, batchNumber: "ATV-8839", expiryDate: "2028-06-30", minStockLevel: 20 },
+        { id: "i-3", name: "Ibuprofen 400mg", qty: 8, price: 5.00, batchNumber: "IBP-002", expiryDate: "2026-10-15", minStockLevel: 15 },
+        { id: "i-4", name: "Metformin 500mg", qty: 80, price: 15.00, batchNumber: "MET-129", expiryDate: "2026-08-15", minStockLevel: 25 }
+      ],
+      audit_logs: [
+        { id: "l-1", timestamp: "2026-07-31T09:00:00.000Z", username: "receptionist", role: "receptionist", action: "Patient Intake", details: "Registered John Doe into the system." }
+      ]
+    };
+  },
+
+  get(table) {
+    return this.data[table] || [];
+  },
+
+  getById(table, id) {
+    return (this.data[table] || []).find(item => item.id === id);
+  },
+
+  insert(table, record) {
+    if (!this.data[table]) this.data[table] = [];
+    const prefixMap = {
+      users: 'u',
+      patients: 'p',
+      appointments: 'a',
+      encounters: 'e',
+      prescriptions: 'pr',
+      invoices: 'inv',
+      inventory: 'i',
+      audit_logs: 'l'
+    };
+    const prefix = prefixMap[table] || 'rec';
+    const newRecord = { id: `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`, ...record };
+    this.data[table].push(newRecord);
+    this.save();
+    return newRecord;
+  },
+
+  update(table, id, updates) {
+    if (!this.data[table]) return null;
+    const index = this.data[table].findIndex(item => item.id === id);
+    if (index === -1) return null;
+    this.data[table][index] = { ...this.data[table][index], ...updates };
+    this.save();
+    return this.data[table][index];
+  },
+
+  delete(table, id) {
+    if (!this.data[table]) return false;
+    const initialLen = this.data[table].length;
+    this.data[table] = this.data[table].filter(item => item.id !== id);
+    if (this.data[table].length < initialLen) {
+      this.save();
+      return true;
+    }
+    return false;
+  }
+};
+
+db.init();
+
+module.exports = db;

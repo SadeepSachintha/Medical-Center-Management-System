@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden min-h-screen;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
+      radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.02) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  @apply bg-slate-900/60 backdrop-blur-md border border-slate-800/80;
+}
+
+.glass-card {
+  @apply bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 hover:border-slate-700/60 transition-all duration-300;
+}
+
+.glass-input {
+  @apply bg-slate-950/60 border border-slate-800 focus:border-medical-500/80 focus:ring-1 focus:ring-medical-500/80 rounded-lg outline-none transition-all duration-200 text-slate-100;
+}
+
+/* Glow Effect classes */
+.glow-cyan {
+  text-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+}
+
+.glow-green {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.glow-border {
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.15);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+}
+
+/* Hide default scrollbars but keep scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animations classes */
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
