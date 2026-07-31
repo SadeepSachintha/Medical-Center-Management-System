@@ -43,6 +43,35 @@ export function ConsultationPad() {
     ecg: false
   });
 
+  const [isListening, setIsListening] = useState(false);
+
+  const startSpeechRecognition = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice-to-text dictation is not supported in this browser. Please try Google Chrome, Microsoft Edge, or Safari.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+    recognition.onresult = (e: any) => {
+      const transcript = e.results[0][0].transcript;
+      setNotes(prev => prev + (prev ? ' ' : '') + transcript);
+    };
+    recognition.start();
+  };
+
   // Query: active queue
   const { data: queue = [] } = useQuery({
     queryKey: ['appointmentsQueue'],
@@ -294,15 +323,29 @@ export function ConsultationPad() {
                         Clinical Intake & Encounter Notes
                       </label>
                       
-                      {/* Autofill templates */}
+                      {/* Autofill templates & voice dictation */}
                       <div className="flex gap-1.5">
                         <button 
+                          type="button"
+                          onClick={startSpeechRecognition}
+                          className={`text-[9px] font-semibold px-2 py-0.5 rounded border flex items-center gap-1 transition-all ${
+                            isListening 
+                              ? 'bg-rose-950 border-rose-800 text-rose-300 animate-pulse' 
+                              : 'bg-slate-850 text-slate-400 hover:text-white border-slate-750'
+                          }`}
+                        >
+                          <Sparkles className={`h-3 w-3 ${isListening ? 'text-rose-455 animate-spin' : 'text-medical-400'}`} />
+                          {isListening ? 'Listening...' : 'Dictate'}
+                        </button>
+                        <button 
+                          type="button"
                           onClick={() => applyTemplate('flu')}
                           className="text-[9px] font-semibold text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-750 flex items-center gap-1"
                         >
                           <Sparkles className="h-3 w-3 text-amber-400" /> Flu
                         </button>
                         <button 
+                          type="button"
                           onClick={() => applyTemplate('hypertension')}
                           className="text-[9px] font-semibold text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-750 flex items-center gap-1"
                         >

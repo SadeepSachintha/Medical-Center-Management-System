@@ -77,6 +77,15 @@
         "temp": "98.6",
         "bmi": "22.5"
       }
+    },
+    {
+      "id": "a-316866",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "103",
+      "date": "2026-07-31T06:13:20.987Z",
+      "status": "in-consultation",
+      "triage": null
     }
   ],
   "encounters": [
@@ -136,6 +145,23 @@
       "total": 2400,
       "status": "paid",
       "paymentMethod": "Card"
+    },
+    {
+      "id": "inv-843707",
+      "appointmentId": "a-316866",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-07-31T06:13:20.989Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
     }
   ],
   "inventory": [
@@ -224,6 +250,110 @@
       "role": "receptionist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-827540",
+      "timestamp": "2026-07-31T06:12:39.721Z",
+      "username": "doctor",
+      "role": "doctor",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-205425",
+      "timestamp": "2026-07-31T06:12:56.267Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-225576",
+      "timestamp": "2026-07-31T06:13:07.348Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"J\""
+    },
+    {
+      "id": "l-646856",
+      "timestamp": "2026-07-31T06:13:07.395Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Jo\""
+    },
+    {
+      "id": "l-552150",
+      "timestamp": "2026-07-31T06:13:07.471Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Joh\""
+    },
+    {
+      "id": "l-398882",
+      "timestamp": "2026-07-31T06:13:07.516Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John\""
+    },
+    {
+      "id": "l-232772",
+      "timestamp": "2026-07-31T06:13:07.607Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John \""
+    },
+    {
+      "id": "l-474015",
+      "timestamp": "2026-07-31T06:13:07.659Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John D\""
+    },
+    {
+      "id": "l-529923",
+      "timestamp": "2026-07-31T06:13:07.732Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Do\""
+    },
+    {
+      "id": "l-976836",
+      "timestamp": "2026-07-31T06:13:07.828Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-284664",
+      "timestamp": "2026-07-31T06:13:20.990Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 103 to patient ID: p-1"
+    },
+    {
+      "id": "l-348440",
+      "timestamp": "2026-07-31T06:13:30.838Z",
+      "username": "doctor",
+      "role": "doctor",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-449430",
+      "timestamp": "2026-07-31T06:13:46.906Z",
+      "username": "Dr. Evelyn Carter",
+      "role": "doctor",
+      "action": "Call Patient",
+      "details": "Called Patient John Doe (Token 103) to consult room"
     }
   ]
 }
