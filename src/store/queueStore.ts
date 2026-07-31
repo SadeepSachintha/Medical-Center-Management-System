@@ -25,10 +25,12 @@ interface QueueState {
   socket: Socket | null;
   connected: boolean;
   activeAnnouncement: { token: string; patientName: string; doctorName: string } | null;
+  announcementLanguage: 'en' | 'si' | 'ta' | 'mixed';
   setAppointments: (appts: Appointment[]) => void;
   initializeSocket: (onUpdate: () => void) => void;
   disconnectSocket: () => void;
   clearAnnouncement: () => void;
+  setAnnouncementLanguage: (lang: 'en' | 'si' | 'ta' | 'mixed') => void;
 }
 
 export const useQueueStore = create<QueueState>((set, get) => ({
@@ -36,8 +38,10 @@ export const useQueueStore = create<QueueState>((set, get) => ({
   socket: null,
   connected: false,
   activeAnnouncement: null,
+  announcementLanguage: 'mixed',
 
   setAppointments: (appointments) => set({ appointments }),
+  setAnnouncementLanguage: (announcementLanguage) => set({ announcementLanguage }),
 
   initializeSocket: (onUpdate) => {
     if (get().socket) return;
@@ -61,17 +65,39 @@ export const useQueueStore = create<QueueState>((set, get) => ({
     socket.on('patient-called', (data: { tokenNumber: string; patientName: string; doctorName: string }) => {
       set({ activeAnnouncement: { token: data.tokenNumber, patientName: data.patientName, doctorName: data.doctorName } });
       
-      // Native browser speech synthesizer
+      const lang = get().announcementLanguage;
+
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         
-        // Custom clinical announcement text
-        const text = `Token number ${data.tokenNumber}, Patient ${data.patientName}, please proceed to ${data.doctorName}'s consultation room.`;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 0.95;
-        utterance.pitch = 1.0;
-        
-        window.speechSynthesis.speak(utterance);
+        const speakText = (textStr: string, voiceLang: string) => {
+          const utterance = new SpeechSynthesisUtterance(textStr);
+          utterance.rate = 0.90;
+          utterance.pitch = 1.0;
+          
+          const voices = window.speechSynthesis.getVoices();
+          const matchedVoice = voices.find(v => v.lang.startsWith(voiceLang));
+          if (matchedVoice) {
+            utterance.voice = matchedVoice;
+          }
+          window.speechSynthesis.speak(utterance);
+        };
+
+        const docNameClean = data.doctorName.replace(/Dr\.\s*/i, '');
+
+        if (lang === 'en') {
+          speakText(`Token number ${data.tokenNumber}, Patient ${data.patientName}, please proceed to Dr. ${docNameClean}'s consultation room.`, 'en');
+        } else if (lang === 'si') {
+          speakText(`ටෝකන් අංක ${data.tokenNumber}, රෝගී ${data.patientName}, කරුණාකර වෛද්‍ය ${docNameClean} මහතා හමුවීමට පැමිණෙන්න.`, 'si');
+        } else if (lang === 'ta') {
+          speakText(`அடையாள அட்டை எண் ${data.tokenNumber}, நோயாளி ${data.patientName}, தயவுசெய்து மருத்துவர் ${docNameClean} அறைக்கு வரவும்.`, 'ta');
+        } else if (lang === 'mixed') {
+          speakText(`Token number ${data.tokenNumber}, Patient ${data.patientName}, please proceed to Dr. ${docNameClean}'s room.`, 'en');
+          
+          setTimeout(() => {
+            speakText(`ටෝකන් අංක ${data.tokenNumber}, රෝගී ${data.patientName}, කරුණාකර වෛද්‍ය ${docNameClean} මහතා හමුවීමට පැමිණෙන්න.`, 'si');
+          }, 6500);
+        }
       }
     });
 

@@ -10,7 +10,7 @@ interface LiveQueueBoardProps {
 }
 
 export function LiveQueueBoard({ onBack }: LiveQueueBoardProps) {
-  const { activeAnnouncement, clearAnnouncement, connected } = useQueueStore();
+  const { activeAnnouncement, clearAnnouncement, connected, announcementLanguage, setAnnouncementLanguage } = useQueueStore();
   const [time, setTime] = useState(new Date());
 
   // Keep clock running
@@ -36,10 +36,31 @@ export function LiveQueueBoard({ onBack }: LiveQueueBoardProps) {
   const playAnnouncement = (token: string, name: string, doc: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const text = `Token number ${token}, Patient ${name}, please proceed to ${doc}'s consultation room.`;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
+      
+      const speakText = (textStr: string, voiceLang: string) => {
+        const utterance = new SpeechSynthesisUtterance(textStr);
+        utterance.rate = 0.90;
+        utterance.pitch = 1.0;
+        const voices = window.speechSynthesis.getVoices();
+        const matchedVoice = voices.find(v => v.lang.startsWith(voiceLang));
+        if (matchedVoice) utterance.voice = matchedVoice;
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const docNameClean = doc.replace(/Dr\.\s*/i, '');
+
+      if (announcementLanguage === 'en') {
+        speakText(`Token number ${token}, Patient ${name}, please proceed to Dr. ${docNameClean}'s consultation room.`, 'en');
+      } else if (announcementLanguage === 'si') {
+        speakText(`ටෝකන් අංක ${token}, රෝගී ${name}, කරුණාකර වෛද්‍ය ${docNameClean} මහතා හමුවීමට පැමිණෙන්න.`, 'si');
+      } else if (announcementLanguage === 'ta') {
+        speakText(`அடையாள அட்டை எண் ${token}, நோயாளி ${name}, தயவுசெய்து மருத்துவர் ${docNameClean} அறைக்கு வரவும்.`, 'ta');
+      } else if (announcementLanguage === 'mixed') {
+        speakText(`Token number ${token}, Patient ${name}, please proceed to Dr. ${docNameClean}'s room.`, 'en');
+        setTimeout(() => {
+          speakText(`ටෝකන් අංක ${token}, රෝගී ${name}, කරුණාකර වෛද්‍ය ${docNameClean} මහතා හමුවීමට පැමිණෙන්න.`, 'si');
+        }, 6500);
+      }
     }
   };
 
@@ -67,6 +88,21 @@ export function LiveQueueBoard({ onBack }: LiveQueueBoardProps) {
         </div>
 
         <div className="flex items-center gap-6">
+          {/* Language Selector */}
+          <div className="flex items-center gap-2 bg-slate-900 border border-slate-850 px-3 py-1.5 rounded-lg text-xs font-semibold">
+            <span className="text-[10px] text-slate-500 font-bold uppercase">Language:</span>
+            <select
+              value={announcementLanguage}
+              onChange={(e: any) => setAnnouncementLanguage(e.target.value)}
+              className="bg-slate-950 text-white text-[11px] font-bold border border-slate-800 rounded px-2 py-0.5 outline-none focus:border-medical-500"
+            >
+              <option value="mixed">Mixed (EN + SI)</option>
+              <option value="en">English (EN)</option>
+              <option value="si">Sinhala (SI)</option>
+              <option value="ta">Tamil (TA)</option>
+            </select>
+          </div>
+
           {/* Status Badge */}
           <div className="flex items-center gap-2 bg-slate-900 border border-slate-850 px-3 py-1.5 rounded-lg text-xs font-semibold">
             <span className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-ping' : 'bg-rose-500'}`} />
