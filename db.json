@@ -124,16 +124,16 @@
       "items": [
         {
           "name": "Doctor Consultation Fee",
-          "price": 50,
+          "price": 1500,
           "type": "consultation"
         },
         {
           "name": "Atorvastatin 10mg (30 tabs)",
-          "price": 26.97,
+          "price": 900,
           "type": "pharmacy"
         }
       ],
-      "total": 76.97,
+      "total": 2400,
       "status": "paid",
       "paymentMethod": "Card"
     }
@@ -143,7 +143,7 @@
       "id": "i-1",
       "name": "Amoxicillin 500mg",
       "qty": 50,
-      "price": 12.5,
+      "price": 450,
       "batchNumber": "AMX-2026",
       "expiryDate": "2027-12-31",
       "minStockLevel": 15
@@ -152,7 +152,7 @@
       "id": "i-2",
       "name": "Atorvastatin 10mg",
       "qty": 120,
-      "price": 8.99,
+      "price": 900,
       "batchNumber": "ATV-8839",
       "expiryDate": "2028-06-30",
       "minStockLevel": 20
@@ -161,7 +161,7 @@
       "id": "i-3",
       "name": "Ibuprofen 400mg",
       "qty": 8,
-      "price": 5,
+      "price": 180,
       "batchNumber": "IBP-002",
       "expiryDate": "2026-10-15",
       "minStockLevel": 15
@@ -170,7 +170,7 @@
       "id": "i-4",
       "name": "Metformin 500mg",
       "qty": 80,
-      "price": 15,
+      "price": 600,
       "batchNumber": "MET-129",
       "expiryDate": "2026-08-15",
       "minStockLevel": 25
@@ -186,34 +186,18 @@
       "details": "Registered John Doe into the system."
     },
     {
-      "id": "l-943300",
-      "timestamp": "2026-07-31T05:35:09.793Z",
+      "id": "l-513870",
+      "timestamp": "2026-07-31T05:52:44.236Z",
       "username": "receptionist",
       "role": "receptionist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
     },
     {
-      "id": "l-396095",
-      "timestamp": "2026-07-31T05:38:54.328Z",
-      "username": "admin",
-      "role": "admin",
-      "action": "User Login",
-      "details": "Successfully logged into MCMS"
-    },
-    {
-      "id": "l-963752",
-      "timestamp": "2026-07-31T05:39:25.799Z",
+      "id": "l-798768",
+      "timestamp": "2026-07-31T05:53:09.236Z",
       "username": "pharmacist",
       "role": "pharmacist",
-      "action": "User Login",
-      "details": "Successfully logged into MCMS"
-    },
-    {
-      "id": "l-870011",
-      "timestamp": "2026-07-31T05:41:09.871Z",
-      "username": "admin",
-      "role": "admin",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
     }

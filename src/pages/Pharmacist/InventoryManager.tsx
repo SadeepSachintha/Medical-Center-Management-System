@@ -299,7 +299,7 @@ export function InventoryManager() {
                           <td className="py-3 font-bold text-white">{item.name}</td>
                           <td className="py-3 text-slate-400 font-mono">{item.batchNumber}</td>
                           <td className="py-3 text-slate-350">{new Date(item.expiryDate).toLocaleDateString()}</td>
-                          <td className="py-3 text-right font-mono">${item.price.toFixed(2)}</td>
+                          <td className="py-3 text-right font-mono">LKR {item.price.toFixed(2)}</td>
                           <td className="py-3 text-right font-bold font-mono">{item.qty} units</td>
                           <td className="py-3 text-center">
                             <div className="flex justify-center gap-1.5">
@@ -374,10 +374,10 @@ export function InventoryManager() {
                     >
                       <div>
                         <h4 className="font-bold text-white truncate max-w-[120px]">{c.name}</h4>
-                        <p className="text-[9px] text-slate-550 font-mono">${c.price.toFixed(2)} x{c.qty}</p>
+                        <p className="text-[9px] text-slate-550 font-mono">LKR {c.price.toFixed(2)} x{c.qty}</p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-slate-200">${(c.price * c.qty).toFixed(2)}</span>
+                        <span className="font-bold text-slate-200">LKR {(c.price * c.qty).toFixed(2)}</span>
                         <button onClick={() => handleRemoveFromCart(c.id)} className="text-rose-455 hover:text-rose-300">
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -417,7 +417,7 @@ export function InventoryManager() {
               <div className="space-y-4 pt-4 border-t border-slate-800">
                 <div className="flex justify-between text-sm font-bold text-white">
                   <span>Grand Total due</span>
-                  <span className="font-mono text-medical-400">${getCartTotal().toFixed(2)}</span>
+                  <span className="font-mono text-medical-400">LKR {getCartTotal().toFixed(2)}</span>
                 </div>
 
                 <div className="space-y-1">

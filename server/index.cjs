@@ -154,7 +154,7 @@ app.post('/api/appointments', (req, res) => {
   // Also create draft invoice for consultation fee
   const doctor = db.getById('users', doctorId);
   const patient = db.getById('patients', patientId);
-  const consultationFee = 50.00;
+  const consultationFee = 1500.00;
   
   db.insert('invoices', {
     appointmentId: appt.id,
@@ -355,7 +355,7 @@ app.post('/api/prescriptions/:id/dispense', (req, res) => {
     if (invoice) {
       const pharmacyItems = rx.items.map(item => {
         const match = inventory.find(inv => item.drugName.toLowerCase().includes(inv.name.toLowerCase()) || inv.name.toLowerCase().includes(item.drugName.toLowerCase()));
-        const itemPrice = match ? match.price : 10.00;
+        const itemPrice = match ? match.price : 400.00;
         return {
           name: `${item.drugName} (Dispensed)`,
           price: itemPrice,
@@ -444,7 +444,7 @@ app.post('/api/inventory/otc', (req, res) => {
     paymentMethod: paymentMethod || 'Cash'
   });
   
-  logAction(auditUser || 'pharmacist', auditRole || 'pharmacist', 'OTC Sale', `Processed direct counter medicine sale, Total: $${total.toFixed(2)}`);
+  logAction(auditUser || 'pharmacist', auditRole || 'pharmacist', 'OTC Sale', `Processed direct counter medicine sale, Total: LKR ${total.toFixed(2)}`);
   res.status(201).json(invoice);
 });
 

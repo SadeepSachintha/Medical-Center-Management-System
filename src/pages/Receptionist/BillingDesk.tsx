@@ -119,7 +119,7 @@ export function BillingDesk() {
                             ))}
                           </div>
                         </td>
-                        <td className="py-3 text-right font-bold text-white">${inv.total.toFixed(2)}</td>
+                        <td className="py-3 text-right font-bold text-white">LKR {inv.total.toFixed(2)}</td>
                         <td className="py-3 text-center">
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded border ${
                             inv.status === 'paid' 
@@ -199,7 +199,7 @@ export function BillingDesk() {
                     {printInvoice.items.map((item: any, idx: number) => (
                       <div key={idx} className="flex justify-between">
                         <span className="text-slate-350">{item.name}</span>
-                        <span className="font-mono text-white">${item.price.toFixed(2)}</span>
+                        <span className="font-mono text-white">LKR {item.price.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -211,7 +211,7 @@ export function BillingDesk() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-white font-bold text-sm">
                     <span>Total Amount Paid</span>
-                    <span className="font-mono">${printInvoice.total.toFixed(2)}</span>
+                    <span className="font-mono">LKR {printInvoice.total.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
                     <span>Method: {printInvoice.paymentMethod}</span>
@@ -263,14 +263,14 @@ export function BillingDesk() {
                   {activeInvoice.items.map((item: any, idx: number) => (
                     <div key={idx} className="flex justify-between text-xs pt-1.5 first:pt-0">
                       <span className="text-slate-400 truncate max-w-[200px]">{item.name}</span>
-                      <span className="font-mono text-slate-200">${item.price.toFixed(2)}</span>
+                      <span className="font-mono text-slate-200">LKR {item.price.toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
                 <div className="h-px bg-slate-850 mt-2" />
                 <div className="flex justify-between text-sm font-bold text-white mt-1">
                   <span>Grand Total due</span>
-                  <span className="font-mono text-medical-400">${activeInvoice.total.toFixed(2)}</span>
+                  <span className="font-mono text-medical-400">LKR {activeInvoice.total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -341,7 +341,7 @@ export function BillingDesk() {
           {printInvoice.items.map((item: any, idx: number) => (
             <div key={idx} className="flex justify-between">
               <span className="truncate max-w-[200px]">{item.name}</span>
-              <span>${item.price.toFixed(2)}</span>
+              <span>LKR {item.price.toFixed(2)}</span>
             </div>
           ))}
         </div>
@@ -351,11 +351,11 @@ export function BillingDesk() {
         <div className="text-right text-[10px] space-y-1 font-bold">
           <div className="flex justify-between">
             <span>SUBTOTAL:</span>
-            <span>${printInvoice.total.toFixed(2)}</span>
+            <span>LKR {printInvoice.total.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>TOTAL PAID:</span>
-            <span>${printInvoice.total.toFixed(2)}</span>
+            <span>LKR {printInvoice.total.toFixed(2)}</span>
           </div>
         </div>
         

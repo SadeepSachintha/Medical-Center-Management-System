@@ -68,7 +68,7 @@ export function FinancialAnalytics() {
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Grand Clinic Revenue</p>
-            <h3 className="text-xl font-bold text-white mt-0.5">${grandTotal.toFixed(2)}</h3>
+            <h3 className="text-xl font-bold text-white mt-0.5">LKR {grandTotal.toFixed(2)}</h3>
           </div>
         </Card>
 
@@ -79,7 +79,7 @@ export function FinancialAnalytics() {
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Average Receipt Size</p>
-            <h3 className="text-xl font-bold text-white mt-0.5">${avgInvoice.toFixed(2)}</h3>
+            <h3 className="text-xl font-bold text-white mt-0.5">LKR {avgInvoice.toFixed(2)}</h3>
           </div>
         </Card>
 
@@ -157,7 +157,7 @@ export function FinancialAnalytics() {
                         {inv.paymentMethod}
                       </span>
                     </td>
-                    <td className="py-3 text-right text-emerald-400 font-bold">${inv.total.toFixed(2)}</td>
+                    <td className="py-3 text-right text-emerald-400 font-bold">LKR {inv.total.toFixed(2)}</td>
                   </tr>
                 ))
               ) : (

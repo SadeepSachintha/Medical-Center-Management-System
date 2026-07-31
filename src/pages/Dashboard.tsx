@@ -195,7 +195,7 @@ export function Dashboard({ setCurrentTab }: DashboardProps) {
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Revenue Today</p>
-            <h3 className="text-xl font-bold text-white mt-0.5">${isLoading ? '...' : stats?.finance?.revenueToday?.toFixed(2)}</h3>
+            <h3 className="text-xl font-bold text-white mt-0.5">LKR {isLoading ? '...' : stats?.finance?.revenueToday?.toFixed(2)}</h3>
           </div>
         </Card>
 

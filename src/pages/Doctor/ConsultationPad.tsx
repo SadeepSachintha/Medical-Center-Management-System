@@ -390,7 +390,7 @@ export function ConsultationPad() {
                       <div className="p-3 bg-slate-950/60 border border-slate-850 rounded-lg space-y-3.5 animate-fade-in-up">
                         <div className="flex items-center justify-between text-xs text-white font-bold">
                           <span>{selectedDrug.name}</span>
-                          <span className="text-[9px] px-1 bg-medical-950 text-medical-300 rounded font-mono">Pack: ${selectedDrug.price}</span>
+                          <span className="text-[9px] px-1 bg-medical-950 text-medical-300 rounded font-mono">Pack: LKR {selectedDrug.price}</span>
                         </div>
                         
                         <div className="grid grid-cols-3 gap-2">

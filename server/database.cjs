@@ -72,19 +72,19 @@ const db = {
           doctorId: "u-2", 
           date: "2026-07-31T09:20:00.000Z", 
           items: [
-            { name: "Doctor Consultation Fee", price: 50.00, type: "consultation" }, 
-            { name: "Atorvastatin 10mg (30 tabs)", price: 26.97, type: "pharmacy" }
+            { name: "Doctor Consultation Fee", price: 1500.00, type: "consultation" }, 
+            { name: "Atorvastatin 10mg (30 tabs)", price: 900.00, type: "pharmacy" }
           ], 
-          total: 76.97, 
+          total: 2400.00, 
           status: "paid", 
           paymentMethod: "Card" 
         }
       ],
       inventory: [
-        { id: "i-1", name: "Amoxicillin 500mg", qty: 50, price: 12.50, batchNumber: "AMX-2026", expiryDate: "2027-12-31", minStockLevel: 15 },
-        { id: "i-2", name: "Atorvastatin 10mg", qty: 120, price: 8.99, batchNumber: "ATV-8839", expiryDate: "2028-06-30", minStockLevel: 20 },
-        { id: "i-3", name: "Ibuprofen 400mg", qty: 8, price: 5.00, batchNumber: "IBP-002", expiryDate: "2026-10-15", minStockLevel: 15 },
-        { id: "i-4", name: "Metformin 500mg", qty: 80, price: 15.00, batchNumber: "MET-129", expiryDate: "2026-08-15", minStockLevel: 25 }
+        { id: "i-1", name: "Amoxicillin 500mg", qty: 50, price: 450.00, batchNumber: "AMX-2026", expiryDate: "2027-12-31", minStockLevel: 15 },
+        { id: "i-2", name: "Atorvastatin 10mg", qty: 120, price: 900.00, batchNumber: "ATV-8839", expiryDate: "2028-06-30", minStockLevel: 20 },
+        { id: "i-3", name: "Ibuprofen 400mg", qty: 8, price: 180.00, batchNumber: "IBP-002", expiryDate: "2026-10-15", minStockLevel: 15 },
+        { id: "i-4", name: "Metformin 500mg", qty: 80, price: 600.00, batchNumber: "MET-129", expiryDate: "2026-08-15", minStockLevel: 25 }
       ],
       audit_logs: [
         { id: "l-1", timestamp: "2026-07-31T09:00:00.000Z", username: "receptionist", role: "receptionist", action: "Patient Intake", details: "Registered John Doe into the system." }
