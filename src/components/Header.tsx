@@ -63,7 +63,7 @@ export function Header({ currentTab }: HeaderProps) {
 
   return (
     <>
-      <header className="h-16 border-b border-slate-800/80 bg-slate-950/40 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
+      <header className="h-16 border-b border-slate-800/80 bg-slate-950/40 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30 no-print">
         <div>
           <h2 className="text-sm font-semibold text-white tracking-wide">{getPageTitle()}</h2>
           <p className="text-[10px] text-slate-400">Clinic Station: Outpatient Department</p>

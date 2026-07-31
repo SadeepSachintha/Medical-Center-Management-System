@@ -56,7 +56,7 @@ export function Sidebar({ currentTab, setCurrentTab }: SidebarProps) {
   const menuItems = menuConfig[user.role] || [];
 
   return (
-    <aside className="w-64 glass-panel border-r border-slate-800/80 flex flex-col justify-between h-screen sticky top-0">
+    <aside className="w-64 glass-panel border-r border-slate-800/80 flex flex-col justify-between h-screen sticky top-0 no-print">
       <div>
         {/* Logo Section */}
         <div className="p-6 border-b border-slate-800/80 flex items-center gap-3">

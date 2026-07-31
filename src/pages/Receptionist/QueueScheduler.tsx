@@ -22,6 +22,7 @@ export function QueueScheduler() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<any | null>(null);
+  const [printToken, setPrintToken] = useState<any | null>(null);
   
   // Triage state
   const [triageApptId, setTriageApptId] = useState<string | null>(null);
@@ -67,8 +68,16 @@ export function QueueScheduler() {
       });
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['appointmentsQueue'] });
+      if (selectedPatient) {
+        setPrintToken({
+          patientName: selectedPatient.name,
+          tokenNumber: data.tokenNumber,
+          doctorName: 'Dr. Evelyn Carter',
+          date: data.date
+        });
+      }
       setSelectedPatient(null);
       setSearchQuery('');
     }
@@ -105,8 +114,35 @@ export function QueueScheduler() {
   };
 
   return (
-    <div className="p-6 space-y-6 animate-fade-in-up">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <>
+      <div className="p-6 space-y-6 animate-fade-in-up no-print">
+        {printToken && (
+          <Card glowColor="cyan" className="border-medical-500/50 bg-slate-900/85 flex items-center justify-between p-4 mb-2">
+            <div>
+              <h4 className="text-xs font-bold text-white">Queue Token {printToken.tokenNumber} Generated!</h4>
+              <p className="text-[10px] text-slate-400 mt-0.5">Patient: <strong className="text-slate-205">{printToken.patientName}</strong> is assigned to <strong className="text-slate-205">{printToken.doctorName}</strong>.</p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => {
+                  setTimeout(() => window.print(), 100);
+                }}
+              >
+                Print Ticket (80mm)
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setPrintToken(null)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          </Card>
+        )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Token allocation Panel */}
         <div className="lg:col-span-1 space-y-6">
@@ -364,6 +400,26 @@ export function QueueScheduler() {
 
       </div>
     </div>
+    
+    {printToken && (
+      <div className="print-container hidden text-black bg-white p-4 text-center font-mono">
+        <h2 className="text-xs font-bold border-b border-black pb-1.5 mb-2 uppercase tracking-wide">Aura Clinic OPD</h2>
+        <p className="text-[10px] text-slate-700">Walk-in Queue Slip</p>
+        <p className="text-4xl font-black my-4 leading-none">{printToken.tokenNumber}</p>
+        <div className="space-y-1 text-[9px] text-left border-t border-b border-black py-2 mb-3">
+          <p><strong>Patient:</strong> {printToken.patientName}</p>
+          <p><strong>Physician:</strong> {printToken.doctorName}</p>
+          <p><strong>Issued:</strong> {new Date(printToken.date).toLocaleString()}</p>
+        </div>
+        <p className="text-[8px] text-slate-800 leading-relaxed">
+          Please wait in the clinic lounge.<br />
+          Your token will be spoken aloud.<br />
+          ------------------------<br />
+          * Standalone System Demo *
+        </p>
+      </div>
+    )}
+  </>
   );
 }
 export default QueueScheduler;

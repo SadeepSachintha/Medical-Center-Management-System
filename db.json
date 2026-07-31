@@ -192,6 +192,30 @@
       "role": "receptionist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-396095",
+      "timestamp": "2026-07-31T05:38:54.328Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-963752",
+      "timestamp": "2026-07-31T05:39:25.799Z",
+      "username": "pharmacist",
+      "role": "pharmacist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-870011",
+      "timestamp": "2026-07-31T05:41:09.871Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
     }
   ]
 }

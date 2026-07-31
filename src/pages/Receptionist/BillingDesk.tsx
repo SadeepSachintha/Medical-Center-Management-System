@@ -68,7 +68,8 @@ export function BillingDesk() {
   };
 
   return (
-    <div className="p-6 space-y-6 animate-fade-in-up">
+    <>
+      <div className="p-6 space-y-6 animate-fade-in-up no-print">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Invoices List Panel */}
@@ -315,6 +316,69 @@ export function BillingDesk() {
         </div>
       )}
     </div>
+
+    {printInvoice && (
+      <div className="print-container hidden text-black bg-white p-4 font-mono text-center">
+        <h2 className="text-xs font-bold border-b border-black pb-1 mb-1 uppercase tracking-wide">Aura Medical Center</h2>
+        <p className="text-[9px] text-slate-750">12 Medical Plaza, Suite 400</p>
+        <p className="text-[9px] text-slate-750 font-mono">Receipt Reference: {printInvoice.id}</p>
+        <p className="text-[9px] text-slate-750 font-mono">Date: {new Date(printInvoice.date).toLocaleString()}</p>
+        
+        <div className="h-px border-t border-dashed border-black my-2" />
+        
+        <div className="text-left text-[9px] space-y-1 mb-2">
+          <p><strong>PATIENT:</strong> {printInvoice.patientName}</p>
+          <p><strong>OPERATOR:</strong> Receptionist Sarah</p>
+        </div>
+        
+        <div className="h-px border-t border-dashed border-black my-2" />
+        
+        <div className="text-left text-[9px] space-y-1.5 mb-2">
+          <div className="flex justify-between font-bold">
+            <span>CHARGES DESCRIPTION</span>
+            <span>PRICE</span>
+          </div>
+          {printInvoice.items.map((item: any, idx: number) => (
+            <div key={idx} className="flex justify-between">
+              <span className="truncate max-w-[200px]">{item.name}</span>
+              <span>${item.price.toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+        
+        <div className="h-px border-t border-dashed border-black my-2" />
+        
+        <div className="text-right text-[10px] space-y-1 font-bold">
+          <div className="flex justify-between">
+            <span>SUBTOTAL:</span>
+            <span>${printInvoice.total.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>TOTAL PAID:</span>
+            <span>${printInvoice.total.toFixed(2)}</span>
+          </div>
+        </div>
+        
+        <div className="h-px border-t border-dashed border-black my-2" />
+        
+        <p className="text-[9px] text-left"><strong>METHOD:</strong> {printInvoice.paymentMethod}</p>
+        <p className="text-[9px] text-left text-emerald-800 font-bold">SETTLEMENT: COMPLETED (PAID)</p>
+        
+        {/* Simulated Barcode */}
+        <div className="mt-4 flex flex-col items-center justify-center space-y-1 font-mono">
+          <div className="h-6 w-44 bg-slate-200 border-l border-r border-black flex items-center justify-between px-2 text-[6px] tracking-[3px] text-black overflow-hidden font-bold leading-none select-none">
+            ||||| | |||| ||| |||| | ||| || |||| ||| ||| | ||
+          </div>
+          <p className="text-[7px] text-slate-700 tracking-widest">{printInvoice.id}</p>
+        </div>
+
+        <p className="text-[8px] text-slate-800 mt-4 leading-normal">
+          Thank you for choosing Aura Medical!<br />
+          * Clinic Copy & Patient Claim Slip *
+        </p>
+      </div>
+    )}
+  </>
   );
 }
 export default BillingDesk;

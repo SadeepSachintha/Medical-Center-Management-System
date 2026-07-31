@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../store/authStore';
 import { Card } from '../../components/ui/Card';
@@ -19,6 +19,15 @@ export function InventoryManager() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
 
+  // Query: Inventory list
+  const { data: inventory = [], isLoading } = useQuery({
+    queryKey: ['inventoryList'],
+    queryFn: async () => {
+      const res = await fetch('/api/inventory');
+      return res.json();
+    }
+  });
+
   // Add Item States
   const [showAddForm, setShowAddForm] = useState(false);
   const [newItem, setNewItem] = useState({
@@ -35,14 +44,49 @@ export function InventoryManager() {
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'Card' | 'QR Code'>('Cash');
   const [otcSuccess, setOtcSuccess] = useState(false);
 
-  // Query: Inventory list
-  const { data: inventory = [], isLoading } = useQuery({
-    queryKey: ['inventoryList'],
-    queryFn: async () => {
-      const res = await fetch('/api/inventory');
-      return res.json();
+  // Barcode scanner keyboard-wedge listener
+  const barcodeBuffer = useRef('');
+  const lastKeyTime = useRef(0);
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const currentTime = Date.now();
+      
+      // If speed of typing is fast (< 45ms), buffer it as a barcode scan
+      if (currentTime - lastKeyTime.current > 45) {
+        barcodeBuffer.current = ''; // reset buffer
+      }
+      lastKeyTime.current = currentTime;
+
+      if (e.key.length === 1) {
+        barcodeBuffer.current += e.key;
+      } else if (e.key === 'Enter') {
+        if (barcodeBuffer.current.length > 2) {
+          const barcode = barcodeBuffer.current;
+          barcodeBuffer.current = '';
+          handleBarcodeScan(barcode);
+        }
+      }
+    };
+
+    window.addEventListener('keypress', handleKeyPress);
+    return () => window.removeEventListener('keypress', handleKeyPress);
+  }, [inventory, cart]);
+
+  const handleBarcodeScan = (barcode: string) => {
+    const code = barcode.trim().toUpperCase();
+    const matched = inventory.find((item: any) => 
+      item.batchNumber.toUpperCase() === code || 
+      item.name.toUpperCase().includes(code)
+    );
+
+    if (matched) {
+      handleAddToCart(matched);
+      setOtcSuccess(false);
     }
-  });
+  };
+
+
 
   // Mutation: Add new drug item
   const addItemMutation = useMutation({
@@ -345,6 +389,26 @@ export function InventoryManager() {
                     OTC Sales cart is empty. Click "Add to Sales" on any stockroom item to build a direct sale.
                   </div>
                 )}
+              </div>
+              {/* Keyboard Wedge Barcode simulator for testing */}
+              <div className="mt-4 p-3 bg-slate-950/60 border border-slate-850 rounded-lg">
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+                  <span>Wedge Barcode Simulation</span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 text-[9px]">
+                  {inventory.slice(0, 4).map((item: any) => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleBarcodeScan(item.batchNumber)}
+                      className="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-800 text-left truncate"
+                      title={`Scan batch code: ${item.batchNumber}`}
+                    >
+                      Scan {item.name.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[8px] text-slate-500 mt-1.5 text-center font-mono">Simulates USB barcode scan event</p>
               </div>
             </div>
 

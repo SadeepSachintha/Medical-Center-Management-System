@@ -569,6 +569,11 @@ app.get('/api/admin/users', (req, res) => {
   res.json(safeUsers);
 });
 
+// Admin Download Database Backup
+app.get('/api/admin/backup', (req, res) => {
+  res.json(db.data);
+});
+
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`MCMS Express & WebSockets server running on port ${PORT}`);
