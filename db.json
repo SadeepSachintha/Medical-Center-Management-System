@@ -208,6 +208,14 @@
       "role": "receptionist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-355050",
+      "timestamp": "2026-07-31T05:59:53.691Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
     }
   ]
 }
