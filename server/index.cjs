@@ -3,6 +3,49 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const db = require('./database.cjs');
+const mailService = require('./mailService.cjs');
+
+// Helper to check doctor availability
+function checkDoctorAvailability(doctor, date) {
+  if (!doctor.roster) {
+    return { status: true };
+  }
+  
+  // 1. Check overrides (vacation / leaves)
+  const dateString = date.toISOString().split('T')[0];
+  if (doctor.overrides && Array.isArray(doctor.overrides)) {
+    const override = doctor.overrides.find(o => o.date === dateString);
+    if (override) {
+      return { status: false, reason: `On leave: ${override.reason || 'Time-off'}` };
+    }
+  }
+  
+  // 2. Check weekly roster
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = days[date.getDay()];
+  const rosterDay = doctor.roster[dayName];
+  
+  if (!rosterDay || !rosterDay.active) {
+    return { status: false, reason: `Not scheduled on ${dayName}` };
+  }
+  
+  // Check hours
+  const currentHours = date.getHours();
+  const currentMinutes = date.getMinutes();
+  const currentTimeVal = currentHours * 60 + currentMinutes;
+  
+  const [startH, startM] = rosterDay.startTime.split(':').map(Number);
+  const startTimeVal = startH * 60 + (startM || 0);
+  
+  const [endH, endM] = rosterDay.endTime.split(':').map(Number);
+  const endTimeVal = endH * 60 + (endM || 0);
+  
+  if (currentTimeVal < startTimeVal || currentTimeVal > endTimeVal) {
+    return { status: false, reason: `Outside working hours (${rosterDay.startTime} - ${rosterDay.endTime})` };
+  }
+  
+  return { status: true };
+}
 
 const app = express();
 app.use(cors());
@@ -83,7 +126,7 @@ app.get('/api/patients', (req, res) => {
 });
 
 app.post('/api/patients', (req, res) => {
-  const { name, phone, dob, gender, nationalId, allergies, history, auditUser, auditRole } = req.body;
+  const { name, phone, email, dob, gender, nationalId, allergies, history, auditUser, auditRole } = req.body;
   
   if (!name || !phone || !nationalId) {
     return res.status(400).json({ error: 'Name, Phone, and National ID are required' });
@@ -98,6 +141,7 @@ app.post('/api/patients', (req, res) => {
   const patient = db.insert('patients', {
     name,
     phone,
+    email: email || '',
     dob,
     gender,
     nationalId,
@@ -132,9 +176,24 @@ app.get('/api/appointments', (req, res) => {
 });
 
 app.post('/api/appointments', (req, res) => {
-  const { patientId, doctorId, auditUser, auditRole } = req.body;
+  const { patientId, doctorId, type, auditUser, auditRole } = req.body;
   if (!patientId || !doctorId) {
     return res.status(400).json({ error: 'Patient ID and Doctor ID are required' });
+  }
+
+  const doctor = db.getById('users', doctorId);
+  if (!doctor) {
+    return res.status(404).json({ error: 'Doctor not found' });
+  }
+  if (doctor.role !== 'doctor') {
+    return res.status(400).json({ error: 'Selected user is not a doctor' });
+  }
+
+  // Check availability
+  const checkDate = new Date();
+  const availability = checkDoctorAvailability(doctor, checkDate);
+  if (!availability.status) {
+    return res.status(400).json({ error: `Doctor is unavailable: ${availability.reason}` });
   }
   
   // Calculate walk-in token number (101 + index of today's appointments)
@@ -148,13 +207,13 @@ app.post('/api/appointments', (req, res) => {
     tokenNumber,
     date: new Date().toISOString(),
     status: 'waiting',
-    triage: null
+    triage: null,
+    type: type || 'walk-in'
   });
   
   // Also create draft invoice for consultation fee
-  const doctor = db.getById('users', doctorId);
   const patient = db.getById('patients', patientId);
-  const consultationFee = 1500.00;
+  const consultationFee = doctor.consultationFee !== undefined ? parseFloat(doctor.consultationFee) : 1500.00;
   
   db.insert('invoices', {
     appointmentId: appt.id,
@@ -162,12 +221,17 @@ app.post('/api/appointments', (req, res) => {
     doctorId,
     date: new Date().toISOString(),
     items: [
-      { name: `Doctor Consultation Fee - ${doctor ? doctor.name : 'OPD'}`, price: consultationFee, type: 'consultation' }
+      { name: `Doctor Consultation Fee - ${doctor.name}`, price: consultationFee, type: 'consultation' }
     ],
     total: consultationFee,
     status: 'unpaid',
     paymentMethod: ''
   });
+
+  // Trigger appointment confirmation email
+  if (patient && patient.email) {
+    mailService.sendAppointmentConfirmation(patient, doctor, appt);
+  }
   
   logAction(auditUser || 'receptionist', auditRole || 'receptionist', 'Token Allocation', `Assigned Token ${tokenNumber} to patient ID: ${patientId}`);
   broadcastQueueUpdate();
@@ -477,6 +541,43 @@ app.post('/api/invoices/:id/pay', (req, res) => {
     status: 'paid',
     paymentMethod: paymentMethod || 'Cash'
   });
+
+  // Asynchronously trigger PDF receipt and medical summary email
+  if (updated.patientId) {
+    const patient = db.getById('patients', updated.patientId);
+    if (patient && patient.email) {
+      (async () => {
+        try {
+          const doctor = updated.doctorId ? db.getById('users', updated.doctorId) : null;
+          const appointment = updated.appointmentId ? db.getById('appointments', updated.appointmentId) : null;
+          
+          let encounter = null;
+          let prescription = null;
+          
+          if (updated.appointmentId) {
+            const encounters = db.get('encounters');
+            encounter = encounters.find(e => e.appointmentId === updated.appointmentId);
+            if (encounter) {
+              const prescriptions = db.get('prescriptions');
+              prescription = prescriptions.find(p => p.encounterId === encounter.id);
+            }
+          }
+          
+          if (!encounter) {
+            encounter = {
+              date: updated.date,
+              notes: "Routine patient visit completed. Paid receipt issued.",
+              diagnosisCodes: "Z00.0 (General Medical Examination)"
+            };
+          }
+          
+          await mailService.sendCheckoutReceiptAndSummary(patient, doctor, appointment, updated, encounter, prescription);
+        } catch (err) {
+          console.error('Asynchronous receipt/summary emailing error:', err);
+        }
+      })();
+    }
+  }
   
   logAction(auditUser || 'receptionist', auditRole || 'receptionist', 'Invoice Checkout', `Processed payment for invoice ${invId} via ${paymentMethod}`);
   res.json(updated);
@@ -572,6 +673,74 @@ app.get('/api/admin/users', (req, res) => {
 // Admin Download Database Backup
 app.get('/api/admin/backup', (req, res) => {
   res.json(db.data);
+});
+
+// Cancel Appointment Endpoint
+app.put('/api/appointments/:id/cancel', (req, res) => {
+  const apptId = req.params.id;
+  const { auditUser, auditRole } = req.body;
+  
+  const appt = db.getById('appointments', apptId);
+  if (!appt) {
+    return res.status(404).json({ error: 'Appointment not found' });
+  }
+  
+  const updated = db.update('appointments', apptId, {
+    status: 'cancelled'
+  });
+  
+  // Void invoice
+  const invoices = db.get('invoices');
+  const invoice = invoices.find(inv => inv.appointmentId === apptId);
+  if (invoice) {
+    db.update('invoices', invoice.id, { status: 'void' });
+  }
+  
+  // Trigger cancellation email
+  const patient = db.getById('patients', appt.patientId);
+  const doctor = db.getById('users', appt.doctorId);
+  if (patient && patient.email) {
+    mailService.sendAppointmentCancellation(patient, doctor, updated);
+  }
+  
+  logAction(auditUser || 'receptionist', auditRole || 'receptionist', 'Appointment Cancelled', `Cancelled appointment token ${appt.tokenNumber}`);
+  broadcastQueueUpdate();
+  res.json(updated);
+});
+
+// Update Doctor Details & Roster Endpoint
+app.put('/api/admin/users/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, username, password, role, specialty, roomNumber, consultationFee, bio, roster, overrides, auditUser, auditRole } = req.body;
+  
+  const user = db.getById('users', id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  
+  const updates = {
+    name,
+    username,
+    role,
+    specialty,
+    roomNumber,
+    consultationFee: consultationFee !== undefined ? parseFloat(consultationFee) : undefined,
+    bio,
+    roster,
+    overrides
+  };
+  
+  if (password) {
+    updates.password = password;
+  }
+  
+  // Clear undefined keys
+  Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+  
+  const updatedUser = db.update('users', id, updates);
+  
+  logAction(auditUser || 'admin', auditRole || 'admin', 'User Account Update', `Updated user account for ${name || user.name}`);
+  res.json(updatedUser);
 });
 
 // Production Static Client Serve

@@ -86,6 +86,56 @@
       "date": "2026-07-31T06:13:20.987Z",
       "status": "in-consultation",
       "triage": null
+    },
+    {
+      "id": "a-566568",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "101",
+      "date": "2026-08-01T17:23:22.569Z",
+      "status": "waiting",
+      "triage": null,
+      "type": "walk-in"
+    },
+    {
+      "id": "a-169093",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "102",
+      "date": "2026-08-01T17:24:57.652Z",
+      "status": "waiting",
+      "triage": null,
+      "type": "walk-in"
+    },
+    {
+      "id": "a-285235",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "103",
+      "date": "2026-08-01T17:26:48.361Z",
+      "status": "waiting",
+      "triage": null,
+      "type": "walk-in"
+    },
+    {
+      "id": "a-170156",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "104",
+      "date": "2026-08-01T17:30:14.426Z",
+      "status": "waiting",
+      "triage": null,
+      "type": "walk-in"
+    },
+    {
+      "id": "a-579733",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "tokenNumber": "105",
+      "date": "2026-08-01T17:32:46.694Z",
+      "status": "waiting",
+      "triage": null,
+      "type": "walk-in"
     }
   ],
   "encounters": [
@@ -152,6 +202,91 @@
       "patientId": "p-1",
       "doctorId": "u-2",
       "date": "2026-07-31T06:13:20.989Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
+    },
+    {
+      "id": "inv-495222",
+      "appointmentId": "a-566568",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-08-01T17:23:22.575Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
+    },
+    {
+      "id": "inv-952005",
+      "appointmentId": "a-169093",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-08-01T17:24:57.653Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
+    },
+    {
+      "id": "inv-313689",
+      "appointmentId": "a-285235",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-08-01T17:26:48.363Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
+    },
+    {
+      "id": "inv-300166",
+      "appointmentId": "a-170156",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-08-01T17:30:14.428Z",
+      "items": [
+        {
+          "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
+          "price": 1500,
+          "type": "consultation"
+        }
+      ],
+      "total": 1500,
+      "status": "unpaid",
+      "paymentMethod": ""
+    },
+    {
+      "id": "inv-650668",
+      "appointmentId": "a-579733",
+      "patientId": "p-1",
+      "doctorId": "u-2",
+      "date": "2026-08-01T17:32:46.695Z",
       "items": [
         {
           "name": "Doctor Consultation Fee - Dr. Evelyn Carter",
@@ -362,6 +497,366 @@
       "role": "receptionist",
       "action": "User Login",
       "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-859146",
+      "timestamp": "2026-08-01T17:21:30.268Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-324223",
+      "timestamp": "2026-08-01T17:21:57.301Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-733272",
+      "timestamp": "2026-08-01T17:22:56.002Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"J\""
+    },
+    {
+      "id": "l-686561",
+      "timestamp": "2026-08-01T17:22:56.117Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Joh\""
+    },
+    {
+      "id": "l-416165",
+      "timestamp": "2026-08-01T17:22:56.121Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Jo\""
+    },
+    {
+      "id": "l-746003",
+      "timestamp": "2026-08-01T17:22:56.311Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John\""
+    },
+    {
+      "id": "l-153542",
+      "timestamp": "2026-08-01T17:22:56.453Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John \""
+    },
+    {
+      "id": "l-677027",
+      "timestamp": "2026-08-01T17:22:56.467Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John D\""
+    },
+    {
+      "id": "l-175235",
+      "timestamp": "2026-08-01T17:22:56.574Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Do\""
+    },
+    {
+      "id": "l-497501",
+      "timestamp": "2026-08-01T17:22:56.598Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-952734",
+      "timestamp": "2026-08-01T17:23:22.591Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 101 to patient ID: p-1"
+    },
+    {
+      "id": "l-124965",
+      "timestamp": "2026-08-01T17:23:48.322Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-741722",
+      "timestamp": "2026-08-01T17:24:23.686Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-952203",
+      "timestamp": "2026-08-01T17:24:39.639Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"J\""
+    },
+    {
+      "id": "l-566533",
+      "timestamp": "2026-08-01T17:24:39.822Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Jo\""
+    },
+    {
+      "id": "l-159042",
+      "timestamp": "2026-08-01T17:24:39.966Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Joh\""
+    },
+    {
+      "id": "l-999626",
+      "timestamp": "2026-08-01T17:24:40.097Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John\""
+    },
+    {
+      "id": "l-585691",
+      "timestamp": "2026-08-01T17:24:40.253Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John \""
+    },
+    {
+      "id": "l-606116",
+      "timestamp": "2026-08-01T17:24:40.378Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John D\""
+    },
+    {
+      "id": "l-163436",
+      "timestamp": "2026-08-01T17:24:40.459Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Do\""
+    },
+    {
+      "id": "l-243901",
+      "timestamp": "2026-08-01T17:24:40.561Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-468751",
+      "timestamp": "2026-08-01T17:24:57.655Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 102 to patient ID: p-1"
+    },
+    {
+      "id": "l-825700",
+      "timestamp": "2026-08-01T17:25:35.300Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-171934",
+      "timestamp": "2026-08-01T17:26:48.365Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 103 to patient ID: p-1"
+    },
+    {
+      "id": "l-548130",
+      "timestamp": "2026-08-01T17:27:33.036Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-893497",
+      "timestamp": "2026-08-01T17:29:02.372Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-270967",
+      "timestamp": "2026-08-01T17:29:56.398Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"J\""
+    },
+    {
+      "id": "l-186845",
+      "timestamp": "2026-08-01T17:29:56.997Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Jo\""
+    },
+    {
+      "id": "l-425406",
+      "timestamp": "2026-08-01T17:29:57.377Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Joh\""
+    },
+    {
+      "id": "l-699565",
+      "timestamp": "2026-08-01T17:29:57.672Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John\""
+    },
+    {
+      "id": "l-794153",
+      "timestamp": "2026-08-01T17:29:58.104Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John \""
+    },
+    {
+      "id": "l-679082",
+      "timestamp": "2026-08-01T17:29:58.726Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John D\""
+    },
+    {
+      "id": "l-648591",
+      "timestamp": "2026-08-01T17:29:59.280Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Do\""
+    },
+    {
+      "id": "l-297245",
+      "timestamp": "2026-08-01T17:29:59.334Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-620813",
+      "timestamp": "2026-08-01T17:30:14.433Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 104 to patient ID: p-1"
+    },
+    {
+      "id": "l-805173",
+      "timestamp": "2026-08-01T17:31:41.208Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-804632",
+      "timestamp": "2026-08-01T17:32:10.030Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"J\""
+    },
+    {
+      "id": "l-452674",
+      "timestamp": "2026-08-01T17:32:10.546Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Jo\""
+    },
+    {
+      "id": "l-287253",
+      "timestamp": "2026-08-01T17:32:11.136Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"Joh\""
+    },
+    {
+      "id": "l-337602",
+      "timestamp": "2026-08-01T17:32:11.651Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John\""
+    },
+    {
+      "id": "l-172763",
+      "timestamp": "2026-08-01T17:32:12.027Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John \""
+    },
+    {
+      "id": "l-416510",
+      "timestamp": "2026-08-01T17:32:12.540Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John D\""
+    },
+    {
+      "id": "l-189247",
+      "timestamp": "2026-08-01T17:32:13.333Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Do\""
+    },
+    {
+      "id": "l-664431",
+      "timestamp": "2026-08-01T17:32:14.180Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Patient List Read",
+      "details": "Searched / read patients database with query: \"John Doe\""
+    },
+    {
+      "id": "l-441870",
+      "timestamp": "2026-08-01T17:32:46.697Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "Token Allocation",
+      "details": "Assigned Token 105 to patient ID: p-1"
     }
   ]
 }
