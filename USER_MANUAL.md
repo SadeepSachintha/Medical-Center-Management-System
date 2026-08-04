@@ -60,6 +60,12 @@ Our system replaces manual paper files and clipboard queues with a fast, real-ti
 6. The status changes to a green **"paid"**. Click the **Receipt** button to print the billing receipt layout for the patient.
 7. Click the green **Share via WhatsApp** button to instantly open a WhatsApp chat box populated with a beautifully formatted digital receipt (detailing itemized costs and totals) addressed to the patient's registered number.
 
+### E. Fast QR Code Check-in & Patient Cards
+1. **QR Card Printing**: Immediately after registering a new patient on the **New Patient Intake** screen, the system displays a printable **SS Labz Check-In Card** on screen containing their patient ID QR Code.
+2. Click **Print Check-in Card** to print it on a thermal slip for the patient.
+3. **Fast Check-in**: To check in a patient, navigate to the **Queue Scheduler** and scan the card QR code using a USB barcode scanner. The system Wedge listener automatically matches the card, selects their profile, and schedules their slot.
+4. (For demonstration: you can click the quick shortcut buttons in the **Keyboard Wedge QR Simulator** panel on the scheduler sidebar to test scanning).
+
 ---
 
 ## 4. Daily Guide for Doctors
@@ -78,6 +84,7 @@ Our system replaces manual paper files and clipboard queues with a fast, real-ti
 
 ### B. Entering Medical Notes & Prescriptions
 1. Once the patient enters your room, review their **Nurse Triage Vitals** on the screen.
+   - **Vitals Alert Warnings**: If a patient's BP, Heart Rate, Temperature, or BMI metrics are critical, they will be highlighted with red or orange glowing borders, along with automated description tags (e.g. `⚠️ Hypertension Alert` or `⚠️ Fever Alert`) to assist clinical diagnostic workflows.
 2. In the **Clinical Documentation** form:
    - Check the boxes for **Symptoms** (e.g., Fever, Cough, Headache).
    - Type your detailed consultation notes in the text box.
@@ -102,9 +109,9 @@ Our system replaces manual paper files and clipboard queues with a fast, real-ti
 
 ### B. Managing Stock & Alerts
 1. Click **Inventory Manager** in the left sidebar.
-2. Observe the stock table:
-   - Flashing red **"Low Stock"** labels show medicines running out.
-   - Orange **"Expiring Soon"** labels show medicines close to expiry.
+2. Observe the **Stock Alerts Dashboard** at the top of the page:
+   - Yellow cards list all stock items that have fallen below their `minStockLevel`.
+   - Red cards list all medications approaching expiration within the next 30 days.
 3. To add new stock: click **Add Medication**, type the name, amount, batch number, and click **Commit to Stockroom**.
 
 ### C. Direct Counter Sales (OTC)
@@ -135,6 +142,15 @@ Because our system runs locally on your clinic computer, you have full control o
 3. Under **Manual Export**, click the blue **Export db.json Snapshot** button.
 4. A database file will immediately download to your computer (e.g., `aura_mcms_backup_2026-07-31.json`). **Save this file onto a USB thumb drive daily**.
 5. Observe the **Automated Backups Logs** on the right side of the screen to confirm the system performed its scheduled automatic nightly backups.
+
+### C. HIPAA Compliance Logs Exporter
+To filter, view, and export strict access audit logs for inspections:
+1. Click **Compliance Logs** in the left sidebar.
+2. Filter compliance records using the fields at the top:
+   - Search for specific names, actions, or words in the filter bar.
+   - Select roles (Administrator, Physician, Receptionist, Pharmacist) to isolate specific workers.
+   - Enter date fields (start/end dates) to review specific dates.
+3. Click the blue **Export CSV Report** button to download the spreadsheet file directly onto your computer.
 
 ---
 

@@ -12,8 +12,11 @@ The system operates as a **single-tenant standalone container or local server de
 
 * **Zero CDN Dependency**: Styled with local system font stacks. Works 100% offline in air-gapped environments without breaking layout grids or lagging during font loads.
 * **Thermal Receipt Printing (80mm)**: Custom CSS print sheets (`@media print`) format walk-in token slips and payments receipts to match standard 80mm wide thermal roll sizes.
-* **Keyboard-Wedge Barcode Scanner Input**: A global keyboard event listener captures high-speed keyboard input sequences (key interval < 45ms) and automatically scans item batch numbers into direct pharmacy sales.
+* **Keyboard-Wedge Barcode/QR Scanner Input**: Global keyboard event listeners capture high-speed key scan signals (key interval < 45ms) to automatically scan item batch numbers in pharmacy direct sales and select patient cards in check-ins.
 * **Local Database Backups**: Includes an admin dashboard interface to trigger client-side JSON dumps of `db.json` database state and logs, plus monitoring configurations for nightly container backup crons.
+* **Visual Triage Vitals Alerts**: Automatic diagnostics categorizing vital sign ranges (Hypertension, Tachycardia, Fever, etc.) into visual glowing borders and alert banners.
+* **Pharmacist Alerts Center**: Top-level summary board displaying low-stock alerts (`qty <= minStockLevel`) and expiry warnings (medicines expiring within 30 days).
+* **HIPAA Compliance Log Exporter**: Searchable compliance audits page allowing administrators to filter by role, search keyword, and date range, with a single-click CSV spreadsheet exporter.
 
 ---
 
