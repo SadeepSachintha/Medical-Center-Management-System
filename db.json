@@ -857,6 +857,38 @@
       "role": "receptionist",
       "action": "Token Allocation",
       "details": "Assigned Token 105 to patient ID: p-1"
+    },
+    {
+      "id": "l-676310",
+      "timestamp": "2026-08-04T08:07:02.000Z",
+      "username": "admin",
+      "role": "admin",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-147391",
+      "timestamp": "2026-08-04T08:09:19.819Z",
+      "username": "receptionist",
+      "role": "receptionist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-729982",
+      "timestamp": "2026-08-04T08:10:31.411Z",
+      "username": "doctor",
+      "role": "doctor",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
+    },
+    {
+      "id": "l-692237",
+      "timestamp": "2026-08-04T08:11:10.370Z",
+      "username": "pharmacist",
+      "role": "pharmacist",
+      "action": "User Login",
+      "details": "Successfully logged into MCMS"
     }
   ]
 }
