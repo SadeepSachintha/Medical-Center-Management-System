@@ -169,8 +169,52 @@ export function InventoryManager() {
     return expMs > todayMs && expMs <= todayMs + rangeMs;
   };
 
+  const lowStockItems = inventory.filter((item: any) => item.qty <= item.minStockLevel);
+  const expiringSoonItems = inventory.filter((item: any) => isExpiringSoon(item.expiryDate));
+  const hasAlerts = lowStockItems.length > 0 || expiringSoonItems.length > 0;
+
   return (
     <div className="p-6 space-y-6 animate-fade-in-up">
+      {hasAlerts && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {lowStockItems.length > 0 && (
+            <Card className="border-amber-900/40 bg-amber-955/10 p-4 border-l-4" hoverEffect={false}>
+              <div className="flex gap-2">
+                <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">Low Stock Warnings</h4>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {lowStockItems.map((item: any) => (
+                      <span key={item.id} className="text-[9px] font-bold bg-amber-950/60 border border-amber-900/50 text-amber-300 px-2 py-0.5 rounded">
+                        {item.name} (Qty: {item.qty} / Min: {item.minStockLevel})
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {expiringSoonItems.length > 0 && (
+            <Card className="border-red-900/40 bg-red-955/10 p-4 border-l-4" hoverEffect={false}>
+              <div className="flex gap-2">
+                <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-red-400 uppercase tracking-wider">Expiry Date Warnings (Within 30 Days)</h4>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {expiringSoonItems.map((item: any) => (
+                      <span key={item.id} className="text-[9px] font-bold bg-red-950/60 border border-red-900/50 text-red-400 px-2 py-0.5 rounded animate-pulse">
+                        {item.name} (Expires: {item.expiryDate})
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Inventory Register (8 cols) */}

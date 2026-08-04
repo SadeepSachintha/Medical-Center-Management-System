@@ -18,6 +18,85 @@ import {
   Gauge
 } from 'lucide-react';
 
+export function getVitalsAlerts(triage: any) {
+  if (!triage) return null;
+  const alerts: string[] = [];
+  const status: Record<string, 'normal' | 'warning' | 'critical'> = {
+    bp: 'normal',
+    hr: 'normal',
+    temp: 'normal',
+    bmi: 'normal'
+  };
+
+  // 1. BP check (systolic/diastolic)
+  if (triage.bp) {
+    const parts = triage.bp.split('/');
+    if (parts.length === 2) {
+      const sys = parseInt(parts[0]);
+      const dia = parseInt(parts[1]);
+      if (!isNaN(sys) && !isNaN(dia)) {
+        if (sys >= 140 || dia >= 90) {
+          alerts.push('Hypertension Alert');
+          status.bp = 'critical';
+        } else if (sys <= 90 || dia <= 60) {
+          alerts.push('Hypotension Alert');
+          status.bp = 'critical';
+        } else if (sys >= 130 || dia >= 80) {
+          status.bp = 'warning';
+        }
+      }
+    }
+  }
+
+  // 2. Heart rate (HR)
+  if (triage.hr) {
+    const hr = parseInt(triage.hr);
+    if (!isNaN(hr)) {
+      if (hr >= 100) {
+        alerts.push('Tachycardia (High HR)');
+        status.hr = 'critical';
+      } else if (hr <= 55) {
+        alerts.push('Bradycardia (Low HR)');
+        status.hr = 'critical';
+      } else if (hr >= 90 || hr <= 60) {
+        status.hr = 'warning';
+      }
+    }
+  }
+
+  // 3. Temperature (Temp)
+  if (triage.temp) {
+    const temp = parseFloat(triage.temp);
+    if (!isNaN(temp)) {
+      if (temp >= 100.4) {
+        alerts.push('Fever Alert');
+        status.temp = 'critical';
+      } else if (temp <= 95) {
+        alerts.push('Hypothermia Alert');
+        status.temp = 'critical';
+      } else if (temp >= 99.5 || temp <= 96) {
+        status.temp = 'warning';
+      }
+    }
+  }
+
+  // 4. BMI
+  if (triage.bmi) {
+    const bmi = parseFloat(triage.bmi);
+    if (!isNaN(bmi)) {
+      if (bmi >= 30) {
+        alerts.push('Obese BMI Alert');
+        status.bmi = 'critical';
+      } else if (bmi < 18.5) {
+        alerts.push('Underweight BMI Alert');
+        status.bmi = 'warning';
+      }
+    }
+  }
+
+  return { alerts, status };
+}
+
 export function ConsultationPad() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
@@ -285,26 +364,52 @@ export function ConsultationPad() {
                 </div>
                 
                 {/* Triage summary badges */}
-                {selectedAppt.triage ? (
-                  <div className="flex gap-2 bg-slate-950/40 p-2 rounded-lg border border-slate-850">
-                    <div className="text-center px-2 border-r border-slate-850">
-                      <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Gauge className="h-3 w-3 text-blue-400" /> BP</p>
-                      <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.bp}</p>
+                {selectedAppt.triage ? (() => {
+                  const vitalsInfo = getVitalsAlerts(selectedAppt.triage);
+                  return (
+                    <div className="flex flex-col items-end gap-1.5">
+                      <div className="flex gap-2 bg-slate-950/40 p-2 rounded-lg border border-slate-850">
+                        <div className={`text-center px-2 border-r border-slate-850 rounded p-1 ${
+                          vitalsInfo?.status.bp === 'critical' ? 'bg-red-950/30 border border-red-900/50 text-red-300 shadow shadow-red-500/10' :
+                          vitalsInfo?.status.bp === 'warning' ? 'bg-amber-950/30 border border-amber-900/50 text-amber-300' : ''
+                        }`}>
+                          <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Gauge className="h-3 w-3 text-blue-400" /> BP</p>
+                          <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.bp}</p>
+                        </div>
+                        <div className={`text-center px-2 border-r border-slate-850 rounded p-1 ${
+                          vitalsInfo?.status.hr === 'critical' ? 'bg-red-950/30 border border-red-900/50 text-red-300 shadow shadow-red-500/10' :
+                          vitalsInfo?.status.hr === 'warning' ? 'bg-amber-950/30 border border-amber-900/50 text-amber-300' : ''
+                        }`}>
+                          <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Heart className="h-3 w-3 text-rose-455" /> HR</p>
+                          <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.hr}</p>
+                        </div>
+                        <div className={`text-center px-2 border-r border-slate-850 rounded p-1 ${
+                          vitalsInfo?.status.temp === 'critical' ? 'bg-red-950/30 border border-red-900/50 text-red-300 shadow shadow-red-500/10' :
+                          vitalsInfo?.status.temp === 'warning' ? 'bg-amber-950/30 border border-amber-900/50 text-amber-300' : ''
+                        }`}>
+                          <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Thermometer className="h-3 w-3 text-amber-450" /> Temp</p>
+                          <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.temp}°F</p>
+                        </div>
+                        <div className={`text-center px-2 rounded p-1 ${
+                          vitalsInfo?.status.bmi === 'critical' ? 'bg-red-950/30 border border-red-900/50 text-red-300' :
+                          vitalsInfo?.status.bmi === 'warning' ? 'bg-amber-950/30 border border-amber-900/50 text-amber-300' : ''
+                        }`}>
+                          <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><ActivitySquare className="h-3 w-3 text-emerald-450" /> BMI</p>
+                          <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.bmi}</p>
+                        </div>
+                      </div>
+                      {vitalsInfo && vitalsInfo.alerts.length > 0 && (
+                        <div className="flex flex-wrap gap-1 max-w-xs justify-end">
+                          {vitalsInfo.alerts.map((alert, idx) => (
+                            <span key={idx} className="text-[8px] font-bold bg-red-950/60 text-red-400 border border-red-900/40 px-1.5 py-0.5 rounded animate-pulse">
+                              ⚠️ {alert}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-center px-2 border-r border-slate-850">
-                      <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Heart className="h-3 w-3 text-rose-455" /> HR</p>
-                      <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.hr}</p>
-                    </div>
-                    <div className="text-center px-2 border-r border-slate-850">
-                      <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><Thermometer className="h-3 w-3 text-amber-450" /> Temp</p>
-                      <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.temp}°F</p>
-                    </div>
-                    <div className="text-center px-2">
-                      <p className="text-[8px] text-slate-550 uppercase font-bold flex items-center justify-center gap-0.5"><ActivitySquare className="h-3 w-3 text-emerald-450" /> BMI</p>
-                      <p className="text-xs font-bold text-white font-mono">{selectedAppt.triage.bmi}</p>
-                    </div>
-                  </div>
-                ) : (
+                  );
+                })() : (
                   <span className="text-xs text-amber-400 font-bold animate-pulse flex items-center gap-1">
                     <Clock className="h-4 w-4" /> Patient vitals not captured yet
                   </span>

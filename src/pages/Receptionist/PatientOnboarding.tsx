@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import QRCode from 'qrcode';
 import { useAuthStore } from '../../store/authStore';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -19,6 +20,23 @@ export function PatientOnboarding() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [registeredPatient, setRegisteredPatient] = useState<any | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+
+  // Generate local base64 QR Code URL when registeredPatient changes
+  useEffect(() => {
+    if (registeredPatient?.id) {
+      QRCode.toDataURL(registeredPatient.id, { margin: 1, width: 140 }, (err, url) => {
+        if (!err) {
+          setQrCodeUrl(url);
+        } else {
+          console.error('Failed to generate local QR Code:', err);
+        }
+      });
+    } else {
+      setQrCodeUrl('');
+    }
+  }, [registeredPatient]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +48,7 @@ export function PatientOnboarding() {
     setLoading(true);
     setError(null);
     setSuccess(false);
+    setRegisteredPatient(null);
 
     try {
       const res = await fetch('/api/patients', {
@@ -45,6 +64,7 @@ export function PatientOnboarding() {
 
       if (res.ok) {
         setSuccess(true);
+        setRegisteredPatient(data); // Set registered patient metadata
         // Clear form
         setFormData({
           name: '',
@@ -70,14 +90,14 @@ export function PatientOnboarding() {
       <div className="max-w-2xl mx-auto space-y-6">
         
         {/* Onboarding Intake Form */}
-        <Card className="border-slate-800 bg-slate-900/60 p-6" hoverEffect={false}>
+        <Card className="border-slate-800 bg-slate-900/60 p-6 no-print" hoverEffect={false}>
           <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-5">
             <div className="h-9 w-9 rounded-lg bg-medical-950 border border-medical-800 flex items-center justify-center text-medical-400">
               <UserCheck className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Create Patient Demographics File</h3>
-              <p className="text-[10px] text-slate-455">Establish a new patient electronic healthcare record (EHR)</p>
+              <p className="text-[10px] text-slate-400">Establish a new patient electronic healthcare record (EHR)</p>
             </div>
           </div>
 
@@ -196,6 +216,57 @@ export function PatientOnboarding() {
             </Button>
           </form>
         </Card>
+
+        {/* Check-in QR code Card Display */}
+        {registeredPatient && (
+          <Card className="border-medical-800 bg-slate-900/60 p-6 flex flex-col items-center relative overflow-hidden print:border-none print:bg-white print:p-0 print:m-0" hoverEffect={false}>
+            {/* Header info */}
+            <div className="text-center space-y-1 mb-4 print:text-black">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest print:text-[8px] print:text-black">SS Labz Check-In Card</h4>
+              <p className="text-[10px] text-slate-500 print:text-[7px] print:text-black">Aura Standalone Health Records (EHR)</p>
+            </div>
+
+            {/* Layout box for printing */}
+            <div className="border border-slate-800 bg-slate-950 p-4 rounded-xl flex items-center gap-4 w-full max-w-sm print:border-dashed print:border-slate-800 print:bg-white print:text-black print:p-2 print:border">
+              {/* QR Image */}
+              {qrCodeUrl ? (
+                <img src={qrCodeUrl} alt="QR Code" className="w-28 h-28 bg-white p-1 rounded-lg border border-slate-850 shrink-0 print:w-20 print:h-20" />
+              ) : (
+                <div className="w-28 h-28 bg-slate-950 rounded-lg flex items-center justify-center text-[10px] text-slate-600 border border-slate-850">Generating...</div>
+              )}
+
+              {/* Patient Meta */}
+              <div className="space-y-1.5 min-w-0 print:space-y-1">
+                <p className="text-sm font-bold text-white truncate print:text-black print:text-xs">{registeredPatient.name}</p>
+                <div className="space-y-0.5 font-mono text-[9px] text-slate-400 print:text-black print:text-[8px]">
+                  <p>CARD ID: <span className="font-bold text-white print:text-black">{registeredPatient.id}</span></p>
+                  <p>NAT ID: {registeredPatient.nationalId}</p>
+                  <p>PHONE: {registeredPatient.phone}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Print and Clear actions */}
+            <div className="flex gap-2 mt-5 w-full max-w-sm print:hidden">
+              <Button
+                variant="glass"
+                size="sm"
+                onClick={() => window.print()}
+                className="flex-1 py-1.5 text-[10px] border border-slate-800"
+              >
+                Print Check-in Card
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setRegisteredPatient(null)}
+                className="flex-1 py-1.5 text-[10px]"
+              >
+                Dismiss Card
+              </Button>
+            </div>
+          </Card>
+        )}
 
       </div>
     </div>

@@ -17,6 +17,85 @@ import {
   AlertCircle 
 } from 'lucide-react';
 
+export function getVitalsAlerts(triage: any) {
+  if (!triage) return null;
+  const alerts: string[] = [];
+  const status: Record<string, 'normal' | 'warning' | 'critical'> = {
+    bp: 'normal',
+    hr: 'normal',
+    temp: 'normal',
+    bmi: 'normal'
+  };
+
+  // 1. BP check (systolic/diastolic)
+  if (triage.bp) {
+    const parts = triage.bp.split('/');
+    if (parts.length === 2) {
+      const sys = parseInt(parts[0]);
+      const dia = parseInt(parts[1]);
+      if (!isNaN(sys) && !isNaN(dia)) {
+        if (sys >= 140 || dia >= 90) {
+          alerts.push('Hypertension Alert');
+          status.bp = 'critical';
+        } else if (sys <= 90 || dia <= 60) {
+          alerts.push('Hypotension Alert');
+          status.bp = 'critical';
+        } else if (sys >= 130 || dia >= 80) {
+          status.bp = 'warning';
+        }
+      }
+    }
+  }
+
+  // 2. Heart rate (HR)
+  if (triage.hr) {
+    const hr = parseInt(triage.hr);
+    if (!isNaN(hr)) {
+      if (hr >= 100) {
+        alerts.push('Tachycardia (High HR)');
+        status.hr = 'critical';
+      } else if (hr <= 55) {
+        alerts.push('Bradycardia (Low HR)');
+        status.hr = 'critical';
+      } else if (hr >= 90 || hr <= 60) {
+        status.hr = 'warning';
+      }
+    }
+  }
+
+  // 3. Temperature (Temp)
+  if (triage.temp) {
+    const temp = parseFloat(triage.temp);
+    if (!isNaN(temp)) {
+      if (temp >= 100.4) {
+        alerts.push('Fever Alert');
+        status.temp = 'critical';
+      } else if (temp <= 95) {
+        alerts.push('Hypothermia Alert');
+        status.temp = 'critical';
+      } else if (temp >= 99.5 || temp <= 96) {
+        status.temp = 'warning';
+      }
+    }
+  }
+
+  // 4. BMI
+  if (triage.bmi) {
+    const bmi = parseFloat(triage.bmi);
+    if (!isNaN(bmi)) {
+      if (bmi >= 30) {
+        alerts.push('Obese BMI Alert');
+        status.bmi = 'critical';
+      } else if (bmi < 18.5) {
+        alerts.push('Underweight BMI Alert');
+        status.bmi = 'warning';
+      }
+    }
+  }
+
+  return { alerts, status };
+}
+
 export function QueueScheduler() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
@@ -26,6 +105,50 @@ export function QueueScheduler() {
   
   // Triage state
   const [triageApptId, setTriageApptId] = useState<string | null>(null);
+
+  // Keyboard wedge patient scan refs
+  const scanBuffer = React.useRef('');
+  const lastScanKeyTime = React.useRef(0);
+
+  const handlePatientScan = async (patientId: string) => {
+    try {
+      const res = await fetch(`/api/patients?search=${patientId}&auditUser=${user?.username}&auditRole=${user?.role}`);
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const matched = data.find(p => p.id.toLowerCase() === patientId.toLowerCase());
+        if (matched) {
+          setSelectedPatient(matched);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to lookup scanned patient:', err);
+    }
+  };
+
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const currentTime = Date.now();
+      
+      // If typing speed is too slow, reset buffer
+      if (currentTime - lastScanKeyTime.current > 45) {
+        scanBuffer.current = '';
+      }
+      lastScanKeyTime.current = currentTime;
+
+      if (e.key.length === 1) {
+        scanBuffer.current += e.key;
+      } else if (e.key === 'Enter') {
+        if (scanBuffer.current.toLowerCase().startsWith('p-')) {
+          const patientId = scanBuffer.current.trim();
+          scanBuffer.current = '';
+          handlePatientScan(patientId);
+        }
+      }
+    };
+
+    window.addEventListener('keypress', handleKeyPress);
+    return () => window.removeEventListener('keypress', handleKeyPress);
+  }, [user]);
   const [triageForm, setTriageForm] = useState({
     bp: '120/80',
     hr: '72',
@@ -213,6 +336,36 @@ export function QueueScheduler() {
             </div>
           </Card>
 
+          {/* Keyboard Wedge Patient QR Card simulator for testing */}
+          <Card className="border-slate-800 bg-slate-900/60 p-4 space-y-3" hoverEffect={false}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+                Keyboard Wedge QR Simulator
+              </h3>
+              <span className="text-[8px] text-slate-500">Fast Scan Test</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => handlePatientScan('p-1')}
+                className="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 text-slate-350 rounded border border-slate-850 text-[10px] font-bold transition-colors text-left"
+              >
+                Scan John Doe (p-1)
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePatientScan('p-2')}
+                className="px-2 py-1.5 bg-slate-950 hover:bg-slate-800 text-slate-350 rounded border border-slate-850 text-[10px] font-bold transition-colors text-left"
+              >
+                Scan Jane Smith (p-2)
+              </button>
+            </div>
+            <p className="text-[9px] text-slate-500 text-center italic leading-tight">
+              Simulates a physical QR barcode scanner checking in a patient via check-in card. Focus this browser tab and scan or click above.
+            </p>
+          </Card>
+
           {/* Nurse Triage Intake drawer/card */}
           {triageApptId && (
             <Card glowColor="amber" className="border-amber-500/20 bg-slate-900/60 p-5" hoverEffect={false}>
@@ -335,22 +488,49 @@ export function QueueScheduler() {
                         </td>
                         <td className="py-3 text-slate-300 font-semibold">{appt.doctorName}</td>
                         <td className="py-3">
-                          {appt.triage ? (
-                            <div className="flex flex-wrap gap-1">
-                              <span className="text-[9px] px-1 bg-blue-950 text-blue-300 border border-blue-900 rounded">
-                                BP: {appt.triage.bp}
-                              </span>
-                              <span className="text-[9px] px-1 bg-rose-950 text-rose-300 border border-rose-900 rounded">
-                                HR: {appt.triage.hr}
-                              </span>
-                              <span className="text-[9px] px-1 bg-amber-950 text-amber-300 border border-amber-900 rounded">
-                                T: {appt.triage.temp}°F
-                              </span>
-                              <span className="text-[9px] px-1 bg-emerald-950 text-emerald-300 border border-emerald-900 rounded">
-                                BMI: {appt.triage.bmi}
-                              </span>
-                            </div>
-                          ) : (
+                          {appt.triage ? (() => {
+                            const alerts = getVitalsAlerts(appt.triage);
+                            const hasCritical = alerts && alerts.alerts.length > 0;
+                            return (
+                              <div className="flex flex-col gap-1">
+                                <div className="flex flex-wrap gap-1">
+                                  <span className={`text-[9px] px-1 rounded ${
+                                    alerts?.status.bp === 'critical' ? 'bg-red-955 text-red-300 border border-red-900 animate-pulse font-bold' :
+                                    alerts?.status.bp === 'warning' ? 'bg-amber-955 text-amber-300 border border-amber-900' :
+                                    'bg-blue-950 text-blue-300 border border-blue-900'
+                                  }`}>
+                                    BP: {appt.triage.bp}
+                                  </span>
+                                  <span className={`text-[9px] px-1 rounded ${
+                                    alerts?.status.hr === 'critical' ? 'bg-red-955 text-red-300 border border-red-900 animate-pulse font-bold' :
+                                    alerts?.status.hr === 'warning' ? 'bg-amber-955 text-amber-300 border border-amber-900' :
+                                    'bg-rose-955 text-rose-300 border border-rose-900'
+                                  }`}>
+                                    HR: {appt.triage.hr}
+                                  </span>
+                                  <span className={`text-[9px] px-1 rounded ${
+                                    alerts?.status.temp === 'critical' ? 'bg-red-955 text-red-300 border border-red-900 animate-pulse font-bold' :
+                                    alerts?.status.temp === 'warning' ? 'bg-amber-955 text-amber-300 border border-amber-900' :
+                                    'bg-amber-950 text-amber-300 border border-amber-900'
+                                  }`}>
+                                    T: {appt.triage.temp}°F
+                                  </span>
+                                  <span className={`text-[9px] px-1 rounded ${
+                                    alerts?.status.bmi === 'critical' ? 'bg-red-955 text-red-300 border border-red-900' :
+                                    alerts?.status.bmi === 'warning' ? 'bg-amber-955 text-amber-300 border border-amber-900' :
+                                    'bg-emerald-950 text-emerald-300 border border-emerald-900'
+                                  }`}>
+                                    BMI: {appt.triage.bmi}
+                                  </span>
+                                </div>
+                                {hasCritical && (
+                                  <span className="text-[8px] bg-red-950/60 border border-red-900/40 text-red-400 font-bold px-1 py-0.5 rounded w-fit animate-pulse">
+                                    ⚠️ Critical Vitals
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })() : (
                             <span className="text-[10px] text-amber-400 font-bold animate-pulse">
                               Pending Triage
                             </span>
